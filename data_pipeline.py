@@ -81,9 +81,9 @@ def gen_cut_out_dataset(point_cloud_files, calib_files, area_borders, path="./")
 
 
 if __name__=="__main__":
-    pointcloud_folder = '/mnt/DATA/KITTI_Dataset/training/velodyne'
-    label_folder = '/mnt/DATA/KITTI_Dataset/training/label_2'
-    calib_folder = '/mnt/DATA/KITTI_Dataset/training/calib'
+    pointcloud_folder = '/path/to/KITTI_Dataset/training/velodyne'
+    label_folder = '/path/to/KITTI_Dataset/training/label_2'
+    calib_folder = '/path/to/KITTI_Dataset/training/calib'
 
     minimal_area, maximal_area, pocl_files, calib_files = get_analysis(pointcloud_folder,label_folder,calib_folder)
     gen_cut_out_dataset(pocl_files, calib_files, maximal_area)
