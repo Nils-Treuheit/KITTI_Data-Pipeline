@@ -1,6 +1,5 @@
-LABELED_Area_PoCls/
-testing/
-training/
+lbl_area_PoCls/
+lbl_center_area_PoCls/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

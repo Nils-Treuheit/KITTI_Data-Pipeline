@@ -64,8 +64,8 @@ def get_analysis(pointcloud_folder,label_folder,calib_folder):
     return minimal_area, maximal_area, pocl_files, calib_files
 
 
-def gen_cut_out_dataset(point_cloud_files, calib_files, area_borders, path="./"):
-    folder = join(path,'LABELED_Area_PoCls')
+def gen_cut_out_dataset(point_cloud_files, calib_files, area_borders, path="./lbl_area_PoCls"):
+    folder = join(*path.split('/'))
     point_numbers = list()
     for pocl_file,calib_file in zip(point_cloud_files, calib_files):
         pocl = load_point_cloud(pocl_file)
@@ -90,7 +90,9 @@ if __name__=="__main__":
     calib_folder = '/mnt/DATA/KITTI_Dataset/training/calib'
 
     minimal_area, maximal_area, pocl_files, calib_files = get_analysis(pointcloud_folder,label_folder,calib_folder)
-    gen_cut_out_dataset(pocl_files, calib_files, minimal_area)
+    area_dims = np.array(minimal_area[1])-np.array(minimal_area[0])
+    factor = 1/8
+    gen_cut_out_dataset(pocl_files, calib_files, [np.array(minimal_area[0])*factor,(minimal_area[0]+area_dims)*factor], path="./lbl_center_area_PoCls")
     # TODO: Patching - Visualize them too
     #  -> Dense_1 1/6 close to center(0), Dense2 1/6 from 1/7 to 13/42
     #  -> Medium Dense_1 1/5 from 1/4 to 9/20, Medium Dense_2 1/5 from 2/5 to 3/5
