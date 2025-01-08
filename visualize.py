@@ -5,7 +5,7 @@ pio.renderers.default = 'notebook'
 import plotly.graph_objects as go
 from ipywidgets import interact,IntSlider
 from data_utils import get_files,load_point_cloud,load_labels,load_calibration,\
-    apply_calibration,create_x_rotation_matrix
+    apply_calibration,create_x_rotation_matrix,get_3d_bbox
 
 BBOX_COLORS = {
     'Car': 'lime', 
@@ -18,34 +18,6 @@ BBOX_COLORS = {
     'Misc': 'cornflowerblue',
     'DontCare': 'silver' 
 }
-
-def get_3d_bbox(dimensions, location, rotation_y):
-    """Generate a 3D bounding box from dimensions, location, and rotation."""
-    h, w, l = dimensions
-    x, y, z = location
-
-    # Create a bounding box around the origin
-    x_corners = [-l / 2, l / 2, l / 2, -l / 2, -l / 2, l / 2, l / 2, -l / 2]
-    y_corners = [0, 0, 0, 0, -h, -h, -h, -h]
-    z_corners = [-w / 2, -w / 2, w / 2, w / 2, -w / 2, -w / 2, w / 2, w / 2]
-
-    corners = np.array([x_corners, y_corners, z_corners])
-
-    # Rotation around Y-axis
-    rotation_matrix = np.array([
-        [np.cos(rotation_y), 0, np.sin(rotation_y)],
-        [0, 1, 0],
-        [-np.sin(rotation_y), 0, np.cos(rotation_y)]
-    ])
-
-    # Apply rotation and translation
-    rotated_corners = np.dot(rotation_matrix, corners)
-    rotated_corners[0, :] += x
-    rotated_corners[1, :] += y
-    rotated_corners[2, :] += z
-    rotation_matrix = create_x_rotation_matrix()
-    rotated_corners = np.dot(rotated_corners.T, rotation_matrix.T)
-    return rotated_corners
 
 
 def generate_plane_two_corners(corner1, corner2, z_fixed=None, color='blue'):
