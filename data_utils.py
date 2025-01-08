@@ -106,3 +106,32 @@ def create_x_rotation_matrix():
         [0, -1, 0]   # Z -> Y
     ])  # This is a 90 degree rotation around X-axis
     return rotation_matrix
+
+
+def get_3d_bbox(dimensions, location, rotation_y):
+    """Generate a 3D bounding box from dimensions, location, and rotation."""
+    h, w, l = dimensions
+    x, y, z = location
+
+    # Create a bounding box around the origin
+    x_corners = [-l / 2, l / 2, l / 2, -l / 2, -l / 2, l / 2, l / 2, -l / 2]
+    y_corners = [0, 0, 0, 0, -h, -h, -h, -h]
+    z_corners = [-w / 2, -w / 2, w / 2, w / 2, -w / 2, -w / 2, w / 2, w / 2]
+
+    corners = np.array([x_corners, y_corners, z_corners])
+
+    # Rotation around Y-axis
+    rotation_matrix = np.array([
+        [np.cos(rotation_y), 0, np.sin(rotation_y)],
+        [0, 1, 0],
+        [-np.sin(rotation_y), 0, np.cos(rotation_y)]
+    ])
+
+    # Apply rotation and translation
+    rotated_corners = np.dot(rotation_matrix, corners)
+    rotated_corners[0, :] += x
+    rotated_corners[1, :] += y
+    rotated_corners[2, :] += z
+    rotation_matrix = create_x_rotation_matrix()
+    rotated_corners = np.dot(rotated_corners.T, rotation_matrix.T)
+    return rotated_corners
